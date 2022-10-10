@@ -1,56 +1,37 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, Text, View, Alert, Button } from 'react-native';
+import Geolocation from '@react-native-community/geolocation';
 
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
-import MapView from "react-native-maps";
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+export default function GetCurrentLocationExample() {
+  const getCurrentPosition = () => {
+    Geolocation.getCurrentPosition(
+      (pos) => {
+        setPosition(JSON.stringify(pos));
+      },
+      (error) => Alert.alert('GetCurrentPosition Error', JSON.stringify(error)),
+      { enableHighAccuracy: true }
+    );
+  };
 
-
-const App = () => {
-
+  const [position, setPosition] = useState(null);
+  useEffect(() => {
+    getCurrentPosition();
+  }, []);
 
   return (
-    <View style={styles.container}>
-    {/*Render our MapView*/}
-      <MapView
-        style={styles.map}
-        //specify our coordinates.
-        initialRegion={{
-          latitude: 37.78825,
-          longitude: -122.4324,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
-        }}
-      />
+    <View>
+      <Text>
+        <Text style={styles.title}>Current position: </Text>
+        {position}
+      </Text>
+      <Button title="Get Current Position" onPress={getCurrentPosition} />
     </View>
   );
-};
-
+}
 
 const styles = StyleSheet.create({
-  container: {
-    ...StyleSheet.absoluteFillObject,
-    flex: 1, //the container will fill the whole screen.
-    justifyContent: "flex-end",
-    alignItems: "center",
-  },
-  map: {
-    ...StyleSheet.absoluteFillObject,
+  title: {
+    fontWeight: '500',
   },
 });
-
-export default App;
